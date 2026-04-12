@@ -1,0 +1,27 @@
+{
+  "name": "no-embedding-api",
+  "version": "1.0.0",
+  "description": "API for noembedding.com",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "rebuild_run": "node db/rebuildSchema.js && node db/rebuildSeed.js && npm start",
+    "rebuild:schema": "node db/rebuildSchema.js",
+    "rebuild:seed": "node db/rebuildSeed.js"
+  },
+  "keywords": ["api", "node", "express", "mysql"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.9.7",
+    "uuid": "^9.0.1"
+  },
+  "imports": {
+    "#root/*": "./*"
+  }
+}
