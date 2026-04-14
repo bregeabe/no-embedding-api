@@ -1,21 +1,19 @@
 -- No Embedding API Database Schema
 -- Created for noembedding.com
 
--- Create languages table (independent table, no foreign keys to avoid circular dependency)
 CREATE TABLE IF NOT EXISTS languages (
-  id VARCHAR(36) PRIMARY KEY,
+  languageId CHAR(36) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  code VARCHAR(10) NOT NULL UNIQUE,
+  repoUrl VARCHAR(500) NOT NULL UNIQUE,
   description TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  INDEX idx_language_code (code),
+  INDEX idx_language_repoUrl (repoUrl),
   INDEX idx_language_name (name)
 );
 
--- Create institutions table (independent table, no foreign keys initially)
 CREATE TABLE IF NOT EXISTS institutions (
-  id VARCHAR(36) PRIMARY KEY,
+  institutionId CHAR(36) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   location VARCHAR(255),
   type VARCHAR(100),
@@ -27,54 +25,50 @@ CREATE TABLE IF NOT EXISTS institutions (
   INDEX idx_institution_location (location)
 );
 
--- Create research_groups table (references institutions)
 CREATE TABLE IF NOT EXISTS research_groups (
-  id VARCHAR(36) PRIMARY KEY,
+  researchGroupId CHAR(36) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  institution_id VARCHAR(36),
+  institutionId CHAR(36),
   description TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (institution_id) REFERENCES institutions(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (institutionId) REFERENCES institutions(institutionId) ON DELETE SET NULL ON UPDATE CASCADE,
   INDEX idx_research_group_name (name)
 );
 
--- Create literature table (references languages and institutions)
 CREATE TABLE IF NOT EXISTS literature (
-  id VARCHAR(36) PRIMARY KEY,
+  literatureId CHAR(36) PRIMARY KEY,
   title VARCHAR(500) NOT NULL,
   author VARCHAR(255) NOT NULL,
   abstract TEXT,
-  language_id VARCHAR(36),
-  institution_id VARCHAR(36),
+  languageId CHAR(36),
+  institutionId CHAR(36),
   publication_year INT,
   pdf_path VARCHAR(500),
   doi_url VARCHAR(500),
   open_access_url VARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (language_id) REFERENCES languages(id) ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (institution_id) REFERENCES institutions(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (languageId) REFERENCES languages(languageId) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (institutionId) REFERENCES institutions(institutionId) ON DELETE SET NULL ON UPDATE CASCADE,
   INDEX idx_literature_title (title),
   INDEX idx_literature_author (author),
   INDEX idx_literature_year (publication_year),
-  INDEX idx_literature_language (language_id),
-  INDEX idx_literature_institution (institution_id)
+  INDEX idx_literature_language (languageId),
+  INDEX idx_literature_institution (institutionId)
 );
 
--- Create literature_institutions junction table (many-to-many relationship)
 CREATE TABLE IF NOT EXISTS literature_institutions (
-  id VARCHAR(36) PRIMARY KEY,
-  literature_id VARCHAR(36) NOT NULL,
-  institution_id VARCHAR(36) NOT NULL,
+  literatureInstitutionId CHAR(36) PRIMARY KEY,
+  literatureId CHAR(36) NOT NULL,
+  institutionId CHAR(36) NOT NULL,
   is_primary BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (literature_id) REFERENCES literature(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (institution_id) REFERENCES institutions(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  UNIQUE KEY unique_literature_institution (literature_id, institution_id)
+  FOREIGN KEY (literatureId) REFERENCES literature(literatureId) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (institutionId) REFERENCES institutions(institutionId) ON DELETE CASCADE ON UPDATE CASCADE,
+  UNIQUE KEY unique_literature_institution (literatureId, institutionId)
 );
 
--- Create indexes for better query performance
 CREATE INDEX idx_literature_created_at ON literature(created_at DESC);
 CREATE INDEX idx_languages_created_at ON languages(created_at DESC);
 CREATE INDEX idx_institutions_created_at ON institutions(created_at DESC);
