@@ -15,10 +15,10 @@ CREATE TABLE IF NOT EXISTS languages (
 
 CREATE TABLE IF NOT EXISTS institutions (
   institutionId CHAR(36) PRIMARY KEY,
+  shortName VARCHAR(255) NOT NULL,
   name VARCHAR(255) NOT NULL,
   location VARCHAR(255),
   type VARCHAR(100),
-  description TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_institution_name (name),
@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS institutions (
 CREATE TABLE IF NOT EXISTS research_groups (
   researchGroupId CHAR(36) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
+  url VARCHAR(500) UNIQUE,
   institutionId CHAR(36),
   description TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

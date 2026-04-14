@@ -14,7 +14,6 @@ INSERT INTO languages (languageId, name, repoUrl, type, host) VALUES
 ('a9406d45-8799-466a-a582-677d73402aa7', 'Twist', 'https://github.com/psg-mit/twist-popl22', 'Procedural', "OCaml"),
 ('a6218b37-2ffc-490c-8ae2-d0dd4ce78e88', 'Q#', 'https://github.com/microsoft/qsharp-compiler', 'Procedural', "C#"),
 ('84f32d82-9892-4248-8d59-922535dbf8bc', 'Qiskit', 'https://github.com/Qiskit/qiskit', 'Library', "Python"),
-('3e175462-1c02-4c98-9d7c-3c04012f14ce', 'Strawberry Fields', 'https://github.com/XanaduAI/strawberryfields', 'Library', "Python"),
 ('4d666985-9466-4a40-afa8-6c74870d980d', 'Cirq', 'https://github.com/quantumlib/Cirq', 'Library', "Python"),
 ('30a8cea9-c24b-4706-83aa-eb130561928f', 'tket', 'https://github.com/Quantinuum/tket', 'Library', "Python"),
 ('bf05777c-4b00-4783-bf38-dcb1259c023c', 'ProjectQ', 'https://github.com/ProjectQ-Framework/ProjectQ', 'Library', "Python"),
