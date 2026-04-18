@@ -23,6 +23,8 @@ INSERT INTO languages (languageId, name, repoUrl, type, host) VALUES
 ('58f64449-3a55-4d21-affc-ac7a671763e4', 'QCL', NULL, 'Procedural', NULL),
 ('0bb97513-fe6f-4980-ac57-af74dded3476', 'QASM', 'https://github.com/openqasm/openqasm', 'Intermediate Representation', 'Python'),
 ('d2505189-b62a-44a7-a0b1-d64662cc0a35', 'Quantum Control Machine', 'https://github.com/psg-mit/qcm-artifact', 'Intermediate Representation', 'OCaml'),
-('0d00e3b6-0530-43a8-8cad-5b413df7e9c1', 'QIR', 'https://github.com/qir-alliance/qir-spec', 'Intermediate Representation', 'LLVM');
+('841a2d32-ecf8-43f0-96a9-f10d4592e613', 'SQIR', 'https://github.com/inQWIRE/SQIR/', 'Intermediate Representation', 'Coq'),
+('0d00e3b6-0530-43a8-8cad-5b413df7e9c1', 'QIR', 'https://github.com/qir-alliance/qir-spec', 'Intermediate Representation', 'LLVM'),
+('65aadc12-52f2-4205-b4cd-2e2c7570f089', 'Guppy', 'https://www.quantinuum.com/blog/guppy-programming-the-next-generation-of-quantum-computers', 'Embedded', 'Python');
 
 
