@@ -22,7 +22,16 @@ INSERT INTO institutions (institutionId, shortName, name, location, type) VALUES
 ('4b5c6d7e-8f9a-1b2c-3d4e-5f6a7b8c9d1e', 'Rigetti', 'Rigetti Computing', 'Berkeley, CA', 'Industry Research Lab'),
 ('9fec974c-7ab6-43b4-8d5a-7f0304eaac71', 'UBC', 'The University of British Columbia', 'Vancouver, BC, Canada', 'University'),
 ('71d5d174-d5df-422f-a4bc-35f9cc0e9b19', 'AU', 'Aarhus University', 'Aarhus, Denmark', 'University'),
-('9072d636-1a98-4485-822e-96307be0b6e8', 'CU', 'University of Cambridge', 'Cambridge, UK', 'University');
+('9072d636-1a98-4485-822e-96307be0b6e8', 'CU', 'University of Cambridge', 'Cambridge, UK', 'University'),
+('f628076d-f0e7-4df0-83db-28c9779a8ecf', 'OU', 'University of Oxford', 'Oxford, UK', 'University'),
+('a342626c-b086-4ef3-b152-b10262cbfc64', 'uOttowa', 'University of Ottawa', 'Ottawa, Canada', 'University'),
+('6321c02a-e410-408c-bdde-6a005a964ec7', 'Brown', 'Brown University', 'Providence, RI', 'University'),
+('6d3c21ef-a02f-493e-9daf-7f5bf3e52e12', 'Nottingham', 'Nottingham University', 'Nottingham, UK', 'University'),
+('6a693ab9-2148-4512-b593-2b4e6e92ec1a', 'Glas', 'University of Glasgow', 'Glasgow, UK', 'University'),
+('81b18b87-6605-4d11-b926-6a02d87f50b6', 'UMich', 'University of Michigan', 'Ann Arbor, MI', 'University'),
+('5b3689cb-3746-4af2-9659-fc36fe0d4149', 'THU', 'Tsinghua University', 'Beijing, China', 'University'),
+('cd22d006-6c09-4bc0-8926-780d52367b1b', 'NU', 'Nagoya University', 'Nagoya, Japan', 'University'),
+('29eb5feb-79d2-407c-b27b-41adc3d4185d', 'KU', 'University of Copenhagen', 'Copenhagen, Denmark', 'University');
 
 INSERT INTO research_groups (researchGroupId, name, url, institutionId) VALUES
 ('9b3656b1-1002-445c-a9da-1d17ae93aec4', 'PLUM', 'https://plum-umd.github.io/', '7e8f9a1b-2c3d-4e5f-6a7b-8c9d1e2f3a4b'),
@@ -34,4 +43,4 @@ INSERT INTO research_groups (researchGroupId, name, url, institutionId) VALUES
 ('4de55791-771d-4c7e-8cc7-de0e12c36ded', 'Quantum Software Team Aarhus', 'https://cs.au.dk/research/centers/quantum-software', '71d5d174-d5df-422f-a4bc-35f9cc0e9b19'),
 ('199346a1-cc50-4d3c-9092-c0bab5e23340', 'Centre of Quantum Software and Information', 'https://www.uts.edu.au/research/centres/centre-quantum-software-and-information/qsi-research/quantum-programming-theory', '9c1d2e4f-6a3b-5c7d-8e9f-1a5c9d3e7f2a'),
 ('787225bb-2ab6-4466-999d-40321594d88c', 'Cambridge Quantum Computing Group', 'cst.cam.ac.uk/research/quantum', '9072d636-1a98-4485-822e-96307be0b6e8'),
-('8c77d32c-f925-41b7-b3f2-7e2b1c2c04f3', 'IBM Research', 'cst.cam.ac.uk/research/quantum', '9072d636-1a98-4485-822e-96307be0b6e8'),
+('8c77d32c-f925-41b7-b3f2-7e2b1c2c04f3', 'IBM Research', 'cst.cam.ac.uk/research/quantum', '9072d636-1a98-4485-822e-96307be0b6e8');
