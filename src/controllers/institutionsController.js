@@ -21,7 +21,7 @@ export const getAllInstitutions = async (req, res) => {
 export const getInstitutionById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.promise().query('SELECT * FROM institutions WHERE id = ?', [id]);
+    const [rows] = await pool.promise().query('SELECT * FROM institutions WHERE institutionId = ?', [id]);
     
     if (rows.length === 0) {
       return res.status(404).json({
@@ -45,23 +45,23 @@ export const getInstitutionById = async (req, res) => {
 
 export const createInstitution = async (req, res) => {
   try {
-    const { name, location, type, description } = req.body;
+    const { shortName, name, location, type } = req.body;
     
-    if (!name) {
+    if (!name || !shortName) {
       return res.status(400).json({
         success: false,
-        error: 'Name is required'
+        error: 'Name and shortName are required'
       });
     }
 
     const id = uuidv4();
-    const query = 'INSERT INTO institutions (id, name, location, type, description, created_at) VALUES (?, ?, ?, ?, ?, NOW())';
+    const query = 'INSERT INTO institutions (institutionId, shortName, name, location, type, created_at) VALUES (?, ?, ?, ?, ?, NOW())';
     
-    await pool.promise().query(query, [id, name, location, type, description]);
+    await pool.promise().query(query, [id, shortName, name, location, type]);
     
     res.status(201).json({
       success: true,
-      data: { id, name, location, type, description },
+      data: { id, shortName, name, location, type },
       message: 'Institution created successfully'
     });
   } catch (error) {
@@ -76,10 +76,10 @@ export const createInstitution = async (req, res) => {
 export const updateInstitution = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, location, type, description } = req.body;
+    const { shortName, name, location, type } = req.body;
     
-    const query = 'UPDATE institutions SET name = ?, location = ?, type = ?, description = ?, updated_at = NOW() WHERE id = ?';
-    const [result] = await pool.promise().query(query, [name, location, type, description, id]);
+    const query = 'UPDATE institutions SET shortName = ?, name = ?, location = ?, type = ?, updated_at = NOW() WHERE institutionId = ?';
+    const [result] = await pool.promise().query(query, [shortName, name, location, type, id]);
     
     if (result.affectedRows === 0) {
       return res.status(404).json({
@@ -105,7 +105,7 @@ export const deleteInstitution = async (req, res) => {
   try {
     const { id } = req.params;
     
-    const [result] = await pool.promise().query('DELETE FROM institutions WHERE id = ?', [id]);
+    const [result] = await pool.promise().query('DELETE FROM institutions WHERE institutionId = ?', [id]);
     
     if (result.affectedRows === 0) {
       return res.status(404).json({

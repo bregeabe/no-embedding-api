@@ -21,7 +21,7 @@ export const getAllLanguages = async (req, res) => {
 export const getLanguageById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.promise().query('SELECT * FROM languages WHERE id = ?', [id]);
+    const [rows] = await pool.promise().query('SELECT * FROM languages WHERE languageId = ?', [id]);
     
     if (rows.length === 0) {
       return res.status(404).json({
@@ -45,23 +45,23 @@ export const getLanguageById = async (req, res) => {
 
 export const createLanguage = async (req, res) => {
   try {
-    const { name, code, description } = req.body;
+    const { name, repoUrl, type, host } = req.body;
     
-    if (!name || !code) {
+    if (!name) {
       return res.status(400).json({
         success: false,
-        error: 'Name and code are required'
+        error: 'Name is required'
       });
     }
 
     const id = uuidv4();
-    const query = 'INSERT INTO languages (id, name, code, description, created_at) VALUES (?, ?, ?, ?, NOW())';
+    const query = 'INSERT INTO languages (languageId, name, repoUrl, type, host, created_at) VALUES (?, ?, ?, ?, ?, NOW())';
     
-    await pool.promise().query(query, [id, name, code, description]);
+    await pool.promise().query(query, [id, name, repoUrl, type, host]);
     
     res.status(201).json({
       success: true,
-      data: { id, name, code, description },
+      data: { id, name, repoUrl, type, host },
       message: 'Language created successfully'
     });
   } catch (error) {
@@ -70,7 +70,7 @@ export const createLanguage = async (req, res) => {
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(409).json({
         success: false,
-        error: 'Language code already exists'
+        error: 'Language repoUrl already exists'
       });
     }
     
@@ -84,10 +84,10 @@ export const createLanguage = async (req, res) => {
 export const updateLanguage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, code, description } = req.body;
+    const { name, repoUrl, type, host } = req.body;
     
-    const query = 'UPDATE languages SET name = ?, code = ?, description = ?, updated_at = NOW() WHERE id = ?';
-    const [result] = await pool.promise().query(query, [name, code, description, id]);
+    const query = 'UPDATE languages SET name = ?, repoUrl = ?, type = ?, host = ?, updated_at = NOW() WHERE languageId = ?';
+    const [result] = await pool.promise().query(query, [name, repoUrl, type, host, id]);
     
     if (result.affectedRows === 0) {
       return res.status(404).json({
@@ -113,7 +113,7 @@ export const deleteLanguage = async (req, res) => {
   try {
     const { id } = req.params;
     
-    const [result] = await pool.promise().query('DELETE FROM languages WHERE id = ?', [id]);
+    const [result] = await pool.promise().query('DELETE FROM languages WHERE languageId = ?', [id]);
     
     if (result.affectedRows === 0) {
       return res.status(404).json({

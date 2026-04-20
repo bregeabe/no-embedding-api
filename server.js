@@ -7,6 +7,7 @@ import pool from "#root/db/config.js";
 import languagesRoutes from "#root/src/routes/languages.js";
 import institutionsRoutes from "#root/src/routes/institutions.js";
 import literatureRoutes from "#root/src/routes/literature.js";
+import researchGroupsRoutes from "#root/src/routes/researchGroups.js";
 
 initializeNode();
 
@@ -34,6 +35,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/languages', languagesRoutes);
 app.use('/api/institutions', institutionsRoutes);
 app.use('/api/literature', literatureRoutes);
+app.use('/api/research-groups', researchGroupsRoutes);
 
 app.use((error, req, res, next) => {
   console.error('Error:', error);
