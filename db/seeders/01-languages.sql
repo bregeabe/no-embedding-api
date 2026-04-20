@@ -15,7 +15,7 @@ INSERT INTO languages (languageId, name, repoUrl, type, host) VALUES
 ('a6218b37-2ffc-490c-8ae2-d0dd4ce78e88', 'Q#', 'https://github.com/microsoft/qsharp-compiler', 'Procedural', "C#"),
 ('84f32d82-9892-4248-8d59-922535dbf8bc', 'Qiskit', 'https://github.com/Qiskit/qiskit', 'Library', "Python"),
 ('4d666985-9466-4a40-afa8-6c74870d980d', 'Cirq', 'https://github.com/quantumlib/Cirq', 'Library', "Python"),
-('30a8cea9-c24b-4706-83aa-eb130561928f', 'tket', 'https://github.com/Quantinuum/tket', 'Library', "Python"),
+('30a8cea9-c24b-4706-83aa-eb130561928f', 't|ket〉', 'https://github.com/Quantinuum/tket', 'Library', "Python"),
 ('bf05777c-4b00-4783-bf38-dcb1259c023c', 'ProjectQ', 'https://github.com/ProjectQ-Framework/ProjectQ', 'Library', "Python"),
 ('9dc7b338-887a-426f-a754-3e2d7588e121', 'QWire', 'https://github.com/inQWIRE/QWIRE', 'Functional', "Coq"),
 ('6ec32296-2ab0-488a-a2ea-472a28bb272d', 'Scaffold', 'https://github.com/epiqc/ScaffCC', 'Procedural', "C++"),
@@ -25,6 +25,7 @@ INSERT INTO languages (languageId, name, repoUrl, type, host) VALUES
 ('d2505189-b62a-44a7-a0b1-d64662cc0a35', 'Quantum Control Machine', 'https://github.com/psg-mit/qcm-artifact', 'Intermediate Representation', 'OCaml'),
 ('841a2d32-ecf8-43f0-96a9-f10d4592e613', 'SQIR', 'https://github.com/inQWIRE/SQIR/', 'Intermediate Representation', 'Coq'),
 ('0d00e3b6-0530-43a8-8cad-5b413df7e9c1', 'QIR', 'https://github.com/qir-alliance/qir-spec', 'Intermediate Representation', 'LLVM'),
-('65aadc12-52f2-4205-b4cd-2e2c7570f089', 'Guppy', 'https://www.quantinuum.com/blog/guppy-programming-the-next-generation-of-quantum-computers', 'Embedded', 'Python');
+('65aadc12-52f2-4205-b4cd-2e2c7570f089', 'Guppy', 'https://www.quantinuum.com/blog/guppy-programming-the-next-generation-of-quantum-computers', 'Embedded', 'Python'),
+('dbb651c6-7e65-491a-80e4-4dbb7e20e54d', 'isQ', NULL, 'Procedural', NULL);
 
 

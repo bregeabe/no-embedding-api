@@ -8,6 +8,8 @@ INSERT INTO institutions (institutionId, shortName, name, location, type) VALUES
 ('d9b1c8e7-5f3a-4c9b-9e5e-2a1f0c8e4b2a', 'Harvard', 'Harvard University', 'Cambridge, MA', 'University'),
 ('6cd77cb0-9c8c-4b4b-b917-3feff6104887', 'Google', 'Google Research', 'Mountain View, CA', 'Industry Research Lab'),
 ('f9eef6ae-93fb-488f-af2d-c56e5b20f5e8', 'IBM', 'IBM Research', 'Yorktown Heights, NY', 'Industry Research Lab'),
+('ad7903ba-fce3-4966-8ede-558c0d10f3c4', 'Caltech', 'California Institute of Technology', 'Pasadena, CA', 'University'),
+('5b01e731-9479-4de7-b00d-53eeda515a43', 'Quantinuum', 'Quantinuum Research', 'Broomfield, CO', 'Industry Research Lab'),
 ('2f9752c5-a746-4484-8ad6-9aa35d62a70a', 'UC Berkeley', 'University of California, Berkeley', 'Berkeley, CA', 'University'),
 ('8a2b4c6d-9e7f-4a1b-8c5d-3e9f7b2a6c8d', 'UChicago', 'University of Chicago', 'Chicago, IL', 'University'),
 ('7b8c9d5e-4f2a-3b6c-9d8e-5f1a7b4c9d2e', 'UW-Madison', 'University of Wisconsin-Madison', 'Madison, WI', 'University'),
@@ -24,6 +26,7 @@ INSERT INTO institutions (institutionId, shortName, name, location, type) VALUES
 ('71d5d174-d5df-422f-a4bc-35f9cc0e9b19', 'AU', 'Aarhus University', 'Aarhus, Denmark', 'University'),
 ('9072d636-1a98-4485-822e-96307be0b6e8', 'CU', 'University of Cambridge', 'Cambridge, UK', 'University'),
 ('f628076d-f0e7-4df0-83db-28c9779a8ecf', 'OU', 'University of Oxford', 'Oxford, UK', 'University'),
+('6869fdfa-9856-4646-81ea-deca1d5a3608', 'UE', 'University of Edinburgh', 'Edinburgh, UK', 'University'),
 ('a342626c-b086-4ef3-b152-b10262cbfc64', 'uOttowa', 'University of Ottawa', 'Ottawa, Canada', 'University'),
 ('6321c02a-e410-408c-bdde-6a005a964ec7', 'Brown', 'Brown University', 'Providence, RI', 'University'),
 ('6d3c21ef-a02f-493e-9daf-7f5bf3e52e12', 'Nottingham', 'Nottingham University', 'Nottingham, UK', 'University'),
@@ -31,6 +34,8 @@ INSERT INTO institutions (institutionId, shortName, name, location, type) VALUES
 ('81b18b87-6605-4d11-b926-6a02d87f50b6', 'UMich', 'University of Michigan', 'Ann Arbor, MI', 'University'),
 ('5b3689cb-3746-4af2-9659-fc36fe0d4149', 'THU', 'Tsinghua University', 'Beijing, China', 'University'),
 ('cd22d006-6c09-4bc0-8926-780d52367b1b', 'NU', 'Nagoya University', 'Nagoya, Japan', 'University'),
+('31b7c242-64d5-4d2a-9ffa-830fdebd8902', 'UL', 'Université de Lorraine', 'Metz, France', 'University'),
+('9c05cca1-f423-4342-bcc8-295145900584', 'McGill', 'McGill University', 'Montreal, Canada', 'University'),
 ('29eb5feb-79d2-407c-b27b-41adc3d4185d', 'KU', 'University of Copenhagen', 'Copenhagen, Denmark', 'University');
 
 INSERT INTO research_groups (researchGroupId, name, url, institutionId) VALUES
