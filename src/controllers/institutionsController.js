@@ -3,11 +3,38 @@ import { v4 as uuidv4 } from "uuid";
 
 export const getAllInstitutions = async (req, res) => {
   try {
-    const [rows] = await pool.promise().query('SELECT * FROM institutions ORDER BY name ASC');
+    const [institutions] = await pool.promise().query('SELECT * FROM institutions ORDER BY name ASC');
+    
+    const institutionsWithAssociations = await Promise.all(institutions.map(async (institution) => {
+      const [researchGroups] = await pool.promise().query(
+        'SELECT * FROM research_groups WHERE institutionId = ?', 
+        [institution.institutionId || institution.id]
+      );
+      
+      const [literature] = await pool.promise().query(
+        'SELECT DISTINCT l.* FROM literature l JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?', 
+        [institution.institutionId || institution.id]
+      );
+      
+      const [languages] = await pool.promise().query(
+        'SELECT DISTINCT lang.* FROM languages lang JOIN literature l ON lang.languageId = l.languageId JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?',
+        [institution.institutionId || institution.id]
+      );
+      
+      return {
+        ...institution,
+        associations: {
+          researchGroups: researchGroups || [],
+          literature: literature || [],
+          languages: languages || []
+        }
+      };
+    }));
+    
     res.json({
       success: true,
-      data: rows,
-      count: rows.length
+      data: institutionsWithAssociations,
+      count: institutionsWithAssociations.length
     });
   } catch (error) {
     console.error('Error fetching institutions:', error);
@@ -21,7 +48,7 @@ export const getAllInstitutions = async (req, res) => {
 export const getInstitutionById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.promise().query('SELECT * FROM institutions WHERE id = ?', [id]);
+    const [rows] = await pool.promise().query('SELECT * FROM institutions WHERE institutionId = ? OR id = ?', [id, id]);
     
     if (rows.length === 0) {
       return res.status(404).json({
@@ -30,9 +57,34 @@ export const getInstitutionById = async (req, res) => {
       });
     }
 
+    const institution = rows[0];
+    const institutionId = institution.institutionId || institution.id;
+    
+    const [researchGroups] = await pool.promise().query(
+      'SELECT * FROM research_groups WHERE institutionId = ?', 
+      [institutionId]
+    );
+    
+    const [literature] = await pool.promise().query(
+      'SELECT DISTINCT l.* FROM literature l JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?', 
+      [institutionId]
+    );
+    
+    const [languages] = await pool.promise().query(
+      'SELECT DISTINCT lang.* FROM languages lang JOIN literature l ON lang.languageId = l.languageId JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?',
+      [institutionId]
+    );
+
     res.json({
       success: true,
-      data: rows[0]
+      data: {
+        ...institution,
+        associations: {
+          researchGroups: researchGroups || [],
+          literature: literature || [],
+          languages: languages || []
+        }
+      }
     });
   } catch (error) {
     console.error('Error fetching institution:', error);

@@ -3,20 +3,46 @@ import { v4 as uuidv4 } from "uuid";
 
 export const getAllLiterature = async (req, res) => {
   try {
-    const [rows] = await pool.promise().query(`
-      SELECT l.*, 
-             lang.name as language_name, 
-             inst.name as institution_name 
-      FROM literature l
-      LEFT JOIN languages lang ON l.language_id = lang.id
-      LEFT JOIN institutions inst ON l.institution_id = inst.id
-      ORDER BY l.created_at DESC
-    `);
+    const [literature] = await pool.promise().query('SELECT * FROM literature ORDER BY created_at DESC');
+    
+    const literatureWithAssociations = await Promise.all(literature.map(async (item) => {
+      const literatureId = item.literatureId || item.id;
+      const languageId = item.languageId || item.language_id;
+      
+      const [languages] = await pool.promise().query(
+        'SELECT * FROM languages WHERE languageId = ?', 
+        [languageId]
+      );
+      
+      const [institutions] = await pool.promise().query(
+        'SELECT DISTINCT i.* FROM institutions i JOIN literature_institutions li ON i.institutionId = li.institutionId WHERE li.literatureId = ?',
+        [literatureId]
+      );
+      
+      const institutionIds = institutions.map(inst => inst.institutionId);
+      let researchGroups = [];
+      if (institutionIds.length > 0) {
+        const [rgs] = await pool.promise().query(
+          `SELECT * FROM research_groups WHERE institutionId IN (${institutionIds.map(() => '?').join(',')})`,
+          institutionIds
+        );
+        researchGroups = rgs;
+      }
+      
+      return {
+        ...item,
+        associations: {
+          language: languages[0] || null,
+          institutions: institutions || [],
+          researchGroups: researchGroups || []
+        }
+      };
+    }));
     
     res.json({
       success: true,
-      data: rows,
-      count: rows.length
+      data: literatureWithAssociations,
+      count: literatureWithAssociations.length
     });
   } catch (error) {
     console.error('Error fetching literature:', error);
@@ -30,15 +56,7 @@ export const getAllLiterature = async (req, res) => {
 export const getLiteratureById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.promise().query(`
-      SELECT l.*, 
-             lang.name as language_name, 
-             inst.name as institution_name 
-      FROM literature l
-      LEFT JOIN languages lang ON l.language_id = lang.id
-      LEFT JOIN institutions inst ON l.institution_id = inst.id
-      WHERE l.id = ?
-    `, [id]);
+    const [rows] = await pool.promise().query('SELECT * FROM literature WHERE literatureId = ? OR id = ?', [id, id]);
     
     if (rows.length === 0) {
       return res.status(404).json({
@@ -47,9 +65,40 @@ export const getLiteratureById = async (req, res) => {
       });
     }
 
+    const literature = rows[0];
+    const literatureId = literature.literatureId || literature.id;
+    const languageId = literature.languageId || literature.language_id;
+    
+    const [languages] = await pool.promise().query(
+      'SELECT * FROM languages WHERE languageId = ? OR id = ?', 
+      [languageId, languageId]
+    );
+    
+    const [institutions] = await pool.promise().query(
+      'SELECT DISTINCT i.* FROM institutions i JOIN literature_institutions li ON i.institutionId = li.institutionId WHERE li.literatureId = ?',
+      [literatureId]
+    );
+    
+    const institutionIds = institutions.map(inst => inst.institutionId);
+    let researchGroups = [];
+    if (institutionIds.length > 0) {
+      const [rgs] = await pool.promise().query(
+        `SELECT * FROM research_groups WHERE institutionId IN (${institutionIds.map(() => '?').join(',')})`,
+        institutionIds
+      );
+      researchGroups = rgs;
+    }
+
     res.json({
       success: true,
-      data: rows[0]
+      data: {
+        ...literature,
+        associations: {
+          language: languages[0] || null,
+          institutions: institutions || [],
+          researchGroups: researchGroups || []
+        }
+      }
     });
   } catch (error) {
     console.error('Error fetching literature:', error);
