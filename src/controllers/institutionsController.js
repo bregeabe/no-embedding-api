@@ -8,28 +8,37 @@ export const getAllInstitutions = async (req, res) => {
     const institutionsWithAssociations = await Promise.all(institutions.map(async (institution) => {
       const [researchGroups] = await pool.promise().query(
         'SELECT * FROM research_groups WHERE institutionId = ?', 
-        [institution.institutionId || institution.id]
+        [institution.institutionId]
       );
       
       const [literature] = await pool.promise().query(
-        'SELECT DISTINCT l.* FROM literature l JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?', 
-        [institution.institutionId || institution.id]
+        'SELECT * FROM literature WHERE institutionId = ?', 
+        [institution.institutionId]
       );
       
-      const [languages] = await pool.promise().query(
-        'SELECT DISTINCT lang.* FROM languages lang JOIN literature l ON lang.languageId = l.languageId JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?',
-        [institution.institutionId || institution.id]
-      );
-      
+      const literatureWithAssociations = await Promise.all(literature.map(async (lit) => {
+        const languageId = lit.languageId || lit.language_id;
+        const [languages] = await pool.promise().query(
+          'SELECT * FROM languages WHERE languageId = ?', 
+          [languageId]
+        );
+        return {
+          ...lit,
+          associations: {
+            language: languages[0] || null
+          }
+        };
+      }));
+
       return {
         ...institution,
         associations: {
           researchGroups: researchGroups || [],
-          literature: literature || [],
-          languages: languages || []
+          literature: literatureWithAssociations || [],
         }
       };
     }));
+    
     
     res.json({
       success: true,
@@ -58,7 +67,7 @@ export const getInstitutionById = async (req, res) => {
     }
 
     const institution = rows[0];
-    const institutionId = institution.institutionId || institution.id;
+    const institutionId = institution.institutionId;
     
     const [researchGroups] = await pool.promise().query(
       'SELECT * FROM research_groups WHERE institutionId = ?', 

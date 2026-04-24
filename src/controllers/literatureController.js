@@ -6,7 +6,6 @@ export const getAllLiterature = async (req, res) => {
     const [literature] = await pool.promise().query('SELECT * FROM literature ORDER BY created_at DESC');
     
     const literatureWithAssociations = await Promise.all(literature.map(async (item) => {
-      const literatureId = item.literatureId || item.id;
       const languageId = item.languageId || item.language_id;
       
       const [languages] = await pool.promise().query(
@@ -15,8 +14,8 @@ export const getAllLiterature = async (req, res) => {
       );
       
       const [institutions] = await pool.promise().query(
-        'SELECT DISTINCT i.* FROM institutions i JOIN literature_institutions li ON i.institutionId = li.institutionId WHERE li.literatureId = ?',
-        [literatureId]
+        'SELECT * FROM institutions WHERE institutionId = ?',
+        [item.institutionId]
       );
       
       const institutionIds = institutions.map(inst => inst.institutionId);

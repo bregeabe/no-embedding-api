@@ -13,22 +13,10 @@ export const getAllLanguages = async (req, res) => {
         [languageId]
       );
       
-      const [institutions] = await pool.promise().query(
-        'SELECT DISTINCT i.* FROM institutions i JOIN literature_institutions li ON i.institutionId = li.institutionId JOIN literature l ON li.literatureId = l.literatureId WHERE l.languageId = ?',
-        [languageId]
-      );
-      
-      const [researchGroups] = await pool.promise().query(
-        'SELECT DISTINCT rg.* FROM research_groups rg JOIN institutions i ON rg.institutionId = i.institutionId JOIN literature_institutions li ON i.institutionId = li.institutionId JOIN literature l ON li.literatureId = l.literatureId WHERE l.languageId = ?',
-        [languageId]
-      );
-      
       return {
         ...language,
         associations: {
           literature: literature || [],
-          institutions: institutions || [],
-          researchGroups: researchGroups || []
         }
       };
     }));
