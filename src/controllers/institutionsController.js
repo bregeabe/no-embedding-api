@@ -1,6 +1,40 @@
 import pool from "#root/db/config.js";
 import { v4 as uuidv4 } from "uuid";
 
+const mapResearchGroupsWithAssociations = async (researchGroups, institution) => {
+  return Promise.all(researchGroups.map(async (group) => {
+    const institutionId = group.institutionId || institution.institutionId || institution.id;
+
+    const [literature] = await pool.promise().query(
+      'SELECT * FROM literature WHERE institutionId = ?',
+      [institutionId]
+    );
+
+    const literatureWithAssociations = await Promise.all(literature.map(async (lit) => {
+      const languageId = lit.languageId || lit.language_id;
+      const [languages] = await pool.promise().query(
+        'SELECT * FROM languages WHERE languageId = ?',
+        [languageId]
+      );
+
+      return {
+        ...lit,
+        associations: {
+          language: languages[0] || null
+        }
+      };
+    }));
+
+    return {
+      ...group,
+      associations: {
+        institution: institution || null,
+        literature: literatureWithAssociations || []
+      }
+    };
+  }));
+};
+
 export const getAllInstitutions = async (req, res) => {
   try {
     const [institutions] = await pool.promise().query('SELECT * FROM institutions ORDER BY name ASC');
@@ -10,6 +44,8 @@ export const getAllInstitutions = async (req, res) => {
         'SELECT * FROM research_groups WHERE institutionId = ?', 
         [institution.institutionId]
       );
+
+      const researchGroupsWithAssociations = await mapResearchGroupsWithAssociations(researchGroups, institution);
       
       const [literature] = await pool.promise().query(
         'SELECT * FROM literature WHERE institutionId = ?', 
@@ -33,7 +69,7 @@ export const getAllInstitutions = async (req, res) => {
       return {
         ...institution,
         associations: {
-          researchGroups: researchGroups || [],
+          researchGroups: researchGroupsWithAssociations || [],
           literature: literatureWithAssociations || [],
         }
       };
@@ -73,6 +109,8 @@ export const getInstitutionById = async (req, res) => {
       'SELECT * FROM research_groups WHERE institutionId = ?', 
       [institutionId]
     );
+
+    const researchGroupsWithAssociations = await mapResearchGroupsWithAssociations(researchGroups, institution);
     
     const [literature] = await pool.promise().query(
       'SELECT DISTINCT l.* FROM literature l JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?', 
@@ -89,7 +127,7 @@ export const getInstitutionById = async (req, res) => {
       data: {
         ...institution,
         associations: {
-          researchGroups: researchGroups || [],
+          researchGroups: researchGroupsWithAssociations || [],
           literature: literature || [],
           languages: languages || []
         }
