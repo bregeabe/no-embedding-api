@@ -5,33 +5,38 @@ export const getAllResearchGroups = async (req, res) => {
   try {
     const [researchGroups] = await pool.promise().query('SELECT * FROM research_groups ORDER BY name ASC');
     
-    // Get associations for each research group
     const researchGroupsWithAssociations = await Promise.all(researchGroups.map(async (group) => {
-      const groupId = group.researchGroupId || group.id;
       const institutionId = group.institutionId;
       
-      // Get the parent institution
       const [institutions] = await pool.promise().query(
-        'SELECT * FROM institutions WHERE institutionId = ? OR id = ?', 
-        [institutionId, institutionId]
+        'SELECT * FROM institutions WHERE institutionId = ?', 
+        [institutionId]
       );
       
       const [literature] = await pool.promise().query(
-        'SELECT DISTINCT l.* FROM literature l JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?',
+        'SELECT * FROM literature WHERE institutionId = ?',
         [institutionId]
       );
       
-      const [languages] = await pool.promise().query(
-        'SELECT DISTINCT lang.* FROM languages lang JOIN literature l ON lang.languageId = l.languageId JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?',
-        [institutionId]
-      );
+      const literatureWithAssociations = await Promise.all(literature.map(async (lit) => {
+        const languageId = lit.languageId;
+        const [languages] = await pool.promise().query(
+          'SELECT * FROM languages WHERE languageId = ?', 
+          [languageId]
+        );
+        return {
+          ...lit,
+          associations: {
+            language: languages[0] || null
+          }
+        };
+      }));
       
       return {
         ...group,
         associations: {
           institution: institutions[0] || null,
-          literature: literature || [],
-          languages: languages || []
+          literature: literatureWithAssociations || [],
         }
       };
     }));
@@ -73,12 +78,13 @@ export const getResearchGroupById = async (req, res) => {
     );
     
     const [literature] = await pool.promise().query(
-      'SELECT DISTINCT l.* FROM literature l JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?',
+      'SELECT * FROM literature WHERE institutionId = ?',
       [institutionId]
     );
     
     const [languages] = await pool.promise().query(
-      'SELECT DISTINCT lang.* FROM languages lang JOIN literature l ON lang.languageId = l.languageId JOIN literature_institutions li ON l.literatureId = li.literatureId WHERE li.institutionId = ?',
+      'SELECT * FROM languages WHERE institutionId = ?',
+
       [institutionId]
     );
 
